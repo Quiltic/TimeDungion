@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 9195896010611081229}
   - component: {fileID: 1254825699003126185}
   - component: {fileID: 2349653475247124181}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Baceplate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -105,7 +105,7 @@ GameObject:
   - component: {fileID: 4289759259654608428}
   - component: {fileID: 3365449281119772459}
   - component: {fileID: 3965372658948010774}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Edge
   m_TagString: Untagged
   m_Icon: {fileID: 0}

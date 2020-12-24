@@ -8,12 +8,13 @@ public class Clicker : MonoBehaviour
     // Start is called before the first frame update
 
     public event Action Click;
+    public event Action RightClick;
     public event Action Hover;
     //UnityEvent m_MyEvent;
 
 
-    public string hovering = "None";
-    public string selected = "None";
+    public GameObject hovering = null; // = "None";
+    public GameObject selected = null; // = "None";
     public float clickPosX = 0;
     public float clickPosY = 0;
     public string State = "None";
@@ -21,10 +22,15 @@ public class Clicker : MonoBehaviour
     public int hoverLength = 180;
     public int hoverTime = 0;
 
+    public GameObject Pointer;
+
 
     public GameObject Heart;
     public GameObject Armor;
     public GameObject MagicArmor;
+
+    Ray ray;
+    RaycastHit hit;
 
     void Start() {
         
@@ -37,42 +43,76 @@ public class Clicker : MonoBehaviour
         //m_MyEvent.AddListener(Ping);
     //}
     // Update is called once per frame
-    void Update () {
+    void Update() {
         
-        if (hovering != "None") {hovering = "None";}
+        if (hovering != null) {hovering = null;}
 
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        //Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
-        RaycastHit hit = Physics.Raycast(mousePos, (mousePos+mousePos+mousePos));
-        //RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
-        Debug.DrawRay(mousePos, hit, Color.green);
 
         
-
-
-        if (hit.collider != null) {
+        ray = GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
+        //if (Physics.Raycast(ray, out hit)) {
+        //    Transform objectHit = hit.transform;
             
-            hovering = hit.collider.gameObject.name;
+            // Do something with the object that was hit by the raycast.
+        //}
+        //Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        //Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
+        //RaycastHit hit = Physics.Raycast(mousePos, (mousePos+mousePos+mousePos));
+        //RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
+        //Debug.DrawRay(Input.mousePosition, hit, Color.green);
+
+        
+
+        if (Physics.Raycast(ray, out hit)) {
+        //if (hit.collider != null) {
+            
+            hovering = hit.collider.gameObject;
 
             if (hoverTime >= hoverLength) {
                 //Debug.Log("FACK");
-                Hover();
+                if (Hover != null)
+                    Hover();
             } else {
                 hoverTime++;
             }
 
 
             if (Input.GetMouseButtonDown(0)) {
-                if (selected == "None") {selected = hovering;} else {selected = "None";}
+                if (selected == null) {
+                    if (!hovering.name.Contains("Floor") && !hovering.name.Contains("Edge") && !hovering.name.Contains("Void")) {
+                        selected = hovering;
+                    } else {
+                        selected = null;
+                    } 
+                    
+                } else {
+                    selected = null;
+                }
                 
-                clickPosX = mousePos.x;
-                clickPosY = mousePos.y;
-                Click();
+                clickPosX = Input.mousePosition.x;
+                clickPosY = Input.mousePosition.y;
+                
+                if (Click != null)
+                    Click();
                 //gameObject.SendMessage(, 5.0);
+            }
+            if (Input.GetMouseButtonDown(1)) { // rightclick
+
+                if (selected != null) 
+                    selected = null;
+                    
+                
+                clickPosX = Input.mousePosition.x;
+                clickPosY = Input.mousePosition.y;
+                
+                if (RightClick != null)
+                    RightClick();
             }
 
             //Debug.Log(lastClicked);
                 //hit.collider.attachedRigidbody.AddForce(Vector2.up);
+
+            Pointer.transform.position = hovering.transform.position + new Vector3(0,1,0);
             
         } else { hoverTime = 0; } //if (hoverTime > 0) { hoverTime--; } else { hoverTime = 0;} }
 
