@@ -42,9 +42,10 @@ public class Clicker : MonoBehaviour
         if (hovering != "None") {hovering = "None";}
 
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
-            
-        RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
+        //Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
+        RaycastHit hit = Physics.Raycast(mousePos, (mousePos+mousePos+mousePos));
+        //RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
+        Debug.DrawRay(mousePos, hit, Color.green);
 
         
 
